@@ -962,11 +962,6 @@ NSArray *lUniqueTag;
 }
 
 
-//Adding a new function
-- (void) newFunction{
-
-}
-
 
 
 @end
