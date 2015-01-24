@@ -1,0 +1,120 @@
+
+#define kSelectionTableViewColor            [UIColor colorWithRed:(245/255.f) green:(245/255.f) blue:(245/255.f) alpha:1.0]
+
+
+#define FONT_DIN_17     [UIFont fontWithName:@"DIN" size:17]
+#define FONT_DIN_15     [UIFont fontWithName:@"DIN" size:15]
+#define FONT_DIN_13     [UIFont fontWithName:@"DIN" size:13]
+#define FONT_DIN_12     [UIFont fontWithName:@"DIN" size:12]
+
+
+extern  UIFont *font_DIN_Black_13;
+
+extern NSString *FACEBOOK_PASSWORD;
+
+extern NSString *DUMMY_USERNAME;
+extern NSString *DUMMY_PASSWORD;
+
+extern NSString	*USER_LOGIN_FINISHED;
+extern NSString	*USER_LOGIN_FAILED;
+
+extern NSString	*USER_LOGIN_FACEBOOK_FINISHED;
+extern NSString	*USER_LOGIN_FACEBOOK_FAILED;
+
+extern NSString	*USER_REGISTER_FINISHED;
+extern NSString	*USER_REGISTER_FAILED;
+
+extern NSString	*ADD_EVENT_FINISHED;
+extern NSString	*ADD_EVENT_FAILED;
+
+extern NSString	*GET_NOTIFICATIONS_FINISHED;
+extern NSString	*GET_NOTIFICATIONS_FAILED;
+
+extern NSString	*GET_EVENTS_FINISHED;
+extern NSString	*GET_EVENTS_FAILED;
+
+extern NSString	*PASSWORD_RECOVER_FINISHED;
+extern NSString	*PASSWORD_RECOVER_FAILED;
+
+extern NSString	*GET_COMMENTS_FINISHED;
+extern NSString	*GET_COMMENTS_FAILED;
+
+extern NSString	*GET_EVENTS_COMMENTS_FINISHED;
+extern NSString	*GET_EVENTS_COMMENTS_FAILED;
+
+extern NSString	*ADD_EVENT_COMMENTS_FINISHED;
+extern NSString	*ADD_EVENT_COMMENTS_FAILED;
+
+extern NSString	*ADD_COMMENTS_FINISHED;
+extern NSString	*ADD_COMMENTS_FAILED;
+
+extern NSString	*UPDATE_PROFILE_FINISHED;
+extern NSString	*UPDATE_PROFILE_FAILED;
+
+extern NSString	*GET_EVENTS_COMMENTS_COUNT_FINISHED;
+extern NSString	*GET_EVENTS_COMMENTS_COUNT_FAILED;
+
+extern NSString	*GET_LIST_ALARM_FINISHED;
+extern NSString	*GET_LIST_ALARM_FAILED;
+
+extern NSString	*GET_COUNTRYNUMBER_FINISHED;
+extern NSString	*GET_COUNTRYNUMBER_FAILED;
+
+extern NSString	*GET_ADDALARM_FINISHED;
+extern NSString	*GET_ADDALARM_FAILED;
+
+extern NSString	*GET_UPDATEALARM_FINISHED;
+extern NSString	*GET_UPDATEALARM_FAILED;
+
+extern NSString	*GET_DELETEALARM_FINISHED;
+extern NSString	*GET_DELETEALARM_FAILED;
+
+extern NSString	*GET_LIST_GROUP_FINISHED;
+extern NSString	*GET_LIST_GROUP_FAILED;
+
+extern NSString	*GET_DELETEGROUP_FINISHED;
+extern NSString	*GET_DELETEGROUP_FAILED;
+
+extern NSString	*DELETE_PERSON_FINISHED;
+extern NSString	*DELETE_PERSON_FAILED;
+
+extern NSString	*ADD_GROUP_FINISHED;
+extern NSString	*ADD_GROUP_FAILED;
+
+extern NSString	*ADD_CONTACT_GROUP_FINISHED;
+extern NSString	*ADD_CONTACT_GROUP_FAILED;
+
+extern NSString	*GET_GROUPCONTACTS_FINISHED;
+extern NSString	*GET_GROUPCONTACTS_FAILED;
+
+extern NSString	*GET_PEOPLE_LOCATION_DETAILS_FINISHED;
+extern NSString	*GET_PEOPLE_LOCATION_DETAILS_FAILED;
+
+extern NSString	*USER_HAS_APP_FINISHED;
+extern NSString	*USER_HAS_APP_FAILED;
+
+extern NSString	*ACCEPT_INVITE_FINISHED;
+extern NSString	*ACCEPT_INVITE_FAILED;
+
+extern NSString	*GROUP_MAP_FINISHED;
+extern NSString	*GROUP_MAP_FAILED;
+
+extern NSString	*NOTIFICATION_DETAIL_FINISHED;
+extern NSString	*NOTIFICATION_DETAIL_FAILED;
+
+extern NSString	*GET_ALARMSETTINGS_FINISHED;
+extern NSString	*GET_ALARMSETTINGS_FAILED;
+
+extern NSString	*SAVE_ALARMSETTINGS_FINISHED;
+extern NSString	*SAVE_ALARMSETTINGS_FAILED;
+
+extern NSString *lServiceURL;
+extern NSString *lCode;
+extern NSString *lSecretKey;
+
+extern NSString *TERMS_OF_USE;
+
+
+//All Webservice Requests
+
+extern NSString *USER_LOGIN_REQUEST;

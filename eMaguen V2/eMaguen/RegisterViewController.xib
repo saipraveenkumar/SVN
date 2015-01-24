@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RegisterViewController">
+            <connections>
+                <outlet property="bnBackTap" destination="Y8y-9j-96I" id="3si-j2-d3f"/>
+                <outlet property="bnRegUsr" destination="c2n-iN-Hij" id="BSb-bd-ldv"/>
+                <outlet property="lBackImg" destination="sS1-ZI-7nL" id="J65-IM-1ka"/>
+                <outlet property="lImageLogo" destination="PjH-He-qfP" id="4fG-UW-Qe2"/>
+                <outlet property="lScrollView" destination="2SH-G2-PAz" id="tbm-1Y-meI"/>
+                <outlet property="lTextFieldEmail" destination="dBH-UV-BMT" id="2LL-pS-UKz"/>
+                <outlet property="lTextFieldPassword" destination="GTz-z8-bi4" id="wOv-aO-hFs"/>
+                <outlet property="lTextFieldRepeatPassword" destination="Cob-xN-Yd3" id="Yim-7H-IIw"/>
+                <outlet property="lTextFieldTelephone" destination="P5S-NG-dKE" id="wBI-xD-xEA"/>
+                <outlet property="lTextFieldUsername" destination="MY0-5S-dN7" id="CHF-uk-wol"/>
+                <outlet property="lblCrtUsr" destination="XZy-yM-I3f" id="nQr-Ym-gvI"/>
+                <outlet property="view" destination="1" id="3"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="1">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="i4_background2.png" translatesAutoresizingMaskIntoConstraints="NO" id="IWX-F4-DNv">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Crear Usuario" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XZy-yM-I3f">
+                    <rect key="frame" x="74" y="7" width="173" height="43"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2SH-G2-PAz">
+                    <rect key="frame" x="31" y="145" width="259" height="186"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="i4_Reg_text_space.png" translatesAutoresizingMaskIntoConstraints="NO" id="Rje-rZ-qf3">
+                            <rect key="frame" x="5" y="10" width="249" height="170"/>
+                        </imageView>
+                        <textField opaque="NO" clipsSubviews="YES" tag="5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="REPETIR CONTRASEÑA" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Cob-xN-Yd3">
+                            <rect key="frame" x="12" y="149" width="240" height="30"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done" secureTextEntry="YES"/>
+                            <connections>
+                                <outlet property="delegate" destination="-1" id="dlr-tm-5wj"/>
+                            </connections>
+                        </textField>
+                        <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="NUMERO DE TELEFONO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="P5S-NG-dKE">
+                            <rect key="frame" x="12" y="50" width="236" height="30"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="phonePad" returnKeyType="done"/>
+                            <connections>
+                                <outlet property="delegate" destination="-1" id="966-so-Hi3"/>
+                            </connections>
+                        </textField>
+                        <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="NOMBRE y APELLIDO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MY0-5S-dN7">
+                            <rect key="frame" x="12" y="15" width="236" height="30"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done"/>
+                            <connections>
+                                <outlet property="delegate" destination="-1" id="Icg-Z6-8Ll"/>
+                            </connections>
+                        </textField>
+                        <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="CONTRASEÑA" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GTz-z8-bi4">
+                            <rect key="frame" x="12" y="118" width="236" height="30"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done" secureTextEntry="YES"/>
+                            <connections>
+                                <outlet property="delegate" destination="-1" id="NN4-cp-8sM"/>
+                            </connections>
+                        </textField>
+                        <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="DIRECCION DE EMAIL" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dBH-UV-BMT">
+                            <rect key="frame" x="12" y="84" width="236" height="30"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" returnKeyType="done"/>
+                            <connections>
+                                <outlet property="delegate" destination="-1" id="KEO-kx-6DB"/>
+                            </connections>
+                        </textField>
+                    </subviews>
+                </scrollView>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c2n-iN-Hij">
+                    <rect key="frame" x="31" y="427" width="259" height="42"/>
+                    <state key="normal" title="REGISTRARSE" backgroundImage="i4_button_off.png">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="BnRegisterTapped:" destination="-1" eventType="touchUpInside" id="hFf-Ff-RPC"/>
+                    </connections>
+                </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="i4_back_icon.png" translatesAutoresizingMaskIntoConstraints="NO" id="sS1-ZI-7nL">
+                    <rect key="frame" x="4" y="21" width="27" height="16"/>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y8y-9j-96I">
+                    <rect key="frame" x="0.0" y="9" width="43" height="40"/>
+                    <state key="normal">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="BnBackTapped:" destination="-1" eventType="touchUpInside" id="qbm-7L-Q0H"/>
+                    </connections>
+                </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="i4_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="PjH-He-qfP">
+                    <rect key="frame" x="85" y="67" width="151" height="56"/>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="meC-Ez-T4f">
+                    <rect key="frame" x="31" y="392" width="259" height="24"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <state key="normal" title="Al suscribirse acepta Términos de uso">
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="BnTermsTapped:" destination="-1" eventType="touchUpInside" id="01j-fy-Mla"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <nil key="simulatedStatusBarMetrics"/>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="i4_Reg_text_space.png" width="249" height="170"/>
+        <image name="i4_back_icon.png" width="27" height="16"/>
+        <image name="i4_background2.png" width="320" height="567"/>
+        <image name="i4_button_off.png" width="250" height="41"/>
+        <image name="i4_logo.png" width="212" height="77"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
