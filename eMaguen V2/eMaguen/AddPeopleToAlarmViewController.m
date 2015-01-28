@@ -202,6 +202,7 @@ MyAppAppDelegate *mAppDelegate;
     
     if([[mAlarmDetails lastObject] intValue] == 0){
         isAlreadyAssociated = NO;
+        lblUserOROwnerName.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"kPrefKeyForUpdatedUsername"];
         NSUserDefaults *lData = [NSUserDefaults standardUserDefaults];
         lblUserNumber.text = [lData objectForKey:@"kPrefKeyForPhone"];
         contacts = [[NSMutableArray alloc]init];
@@ -218,24 +219,10 @@ MyAppAppDelegate *mAppDelegate;
         [contact3 setTitle:@"Agregar contacto" forState:UIControlStateNormal];
     }
     else if([[mAlarmDetails lastObject] intValue] == 1){
-        isAlreadyAssociated = YES;
-        NSDictionary *dict = [mAlarmDetails objectAtIndex:2];
-        lblUserNumber.text = [dict objectForKey:@"OwnerNumber"];
-        NSArray *mobileNumbers = [[dict objectForKey:@"Numbers"] subarrayWithRange:NSMakeRange(0,[[dict objectForKey:@"NumbersCount"] intValue])];
-        for (int i = 1; i < 4; i++) {//3 contacts
-            if(i < [[dict objectForKey:@"NumbersCount"] intValue]){
-                [self initContact:i andContact:[mobileNumbers objectAtIndex:i]];
-            }
-            else{
-                [self initContact:i andContact:NO_CONTACT];
-            }
-        }
-        contact1.enabled = NO;
-        contact2.enabled = NO;
-        contact3.enabled = NO;
-        [contact1 setTitle:@"" forState:UIControlStateNormal];
-        [contact2 setTitle:@"" forState:UIControlStateNormal];
-        [contact3 setTitle:@"" forState:UIControlStateNormal];
+        [self addProgressIndicator];
+        [self showProgressIndicator];
+        mLabelLoading.text = @"Cargando...";
+        [self performSelectorInBackground:@selector(associationAlarmMethod) withObject:nil];
     }
     contactDelete1.hidden = YES;
     contactDelete2.hidden = YES;
@@ -245,14 +232,94 @@ MyAppAppDelegate *mAppDelegate;
     contactDelete3IV.hidden = YES;
 }
 
-- (void)initContact:(int)i andContact:(NSString*)contact{
-    if(i==1){
+- (void)associationAlarmMethod{
+    isAlreadyAssociated = YES;
+    NSDictionary *dict = [mAlarmDetails objectAtIndex:2];
+    lblUserNumber.text = [dict objectForKey:@"OwnerNumber"];
+    [self initContact:4 andContact:lblUserNumber.text];
+    NSArray *mobileNumbers = [[dict objectForKey:@"Numbers"] subarrayWithRange:NSMakeRange(0,[[dict objectForKey:@"NumbersCount"] intValue])];
+    for (int i = 1; i < 4; i++) {//3 contacts
+        if(i < [[dict objectForKey:@"NumbersCount"] intValue]){
+            [self initContact:i andContact:[mobileNumbers objectAtIndex:i]];
+        }
+        else{
+            [self initContact:i andContact:NO_CONTACT];
+        }
+    }
+    contact1.enabled = NO;
+    contact2.enabled = NO;
+    contact3.enabled = NO;
+    [contact1 setTitle:@"" forState:UIControlStateNormal];
+    [contact2 setTitle:@"" forState:UIControlStateNormal];
+    [contact3 setTitle:@"" forState:UIControlStateNormal];
+    [self hideProgressIndicator];
+}
+
+- (void)initContact:(int)check andContact:(NSString*)contact{
+    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
+    int found = 0;
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
+        ABAddressBookRequestAccessWithCompletion(addressBookRef, ^(bool granted, CFErrorRef error) {
+            ABAddressBookRef addressBook = ABAddressBookCreate( );
+        });
+    }
+    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
+        CFErrorRef *error = NULL;
+        ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, error);
+        CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
+        CFIndex numberOfPeople = ABAddressBookGetPersonCount(addressBook);
+        for(int i = 0; i < numberOfPeople; i++) {
+            ABRecordRef person = CFArrayGetValueAtIndex( allPeople, i );
+            ABMultiValueRef phoneNumbers = ABRecordCopyValue(person, kABPersonPhoneProperty);
+            for (CFIndex i = 0; i < ABMultiValueGetCount(phoneNumbers); i++) {
+                NSCharacterSet *notAllowedChars = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
+                NSString *phoneNumber = (__bridge_transfer NSString *) ABMultiValueCopyValueAtIndex(phoneNumbers, i);
+//                NSLog(@"Number: %@",[[phoneNumber componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""]);
+                if(([[[phoneNumber componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""] rangeOfString:contact].location != NSNotFound) || ([contact rangeOfString:[[phoneNumber componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""]].location != NSNotFound))
+                {
+                    NSLog(@"Found");
+                    found = 1;
+                    if(check == 1){
+                    lblContactName1.text =[NSString stringWithFormat:@"%@ %@", ((__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) :[NSString stringWithFormat:@""]),((__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) :[NSString stringWithFormat:@""])];
+                    }
+                    if(check == 2){
+                        lblContactName2.text =[NSString stringWithFormat:@"%@ %@", ((__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) :[NSString stringWithFormat:@""]),((__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) :[NSString stringWithFormat:@""])];
+                    }
+                    if(check == 3){
+                        lblContactName3.text =[NSString stringWithFormat:@"%@ %@", ((__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) :[NSString stringWithFormat:@""]),((__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) :[NSString stringWithFormat:@""])];
+                    }
+                    if(check == 4){
+                        lblUserOROwnerName.text =[NSString stringWithFormat:@"%@ %@", ((__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) :[NSString stringWithFormat:@""]),((__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) :[NSString stringWithFormat:@""])];
+                    }
+                    break;
+                }
+            }
+        }
+        if(found == 0){
+            if(check == 1){
+                lblContactName1.text = @"Sin Nombre";
+            }
+            if(check == 2){
+                lblContactName2.text = @"Sin Nombre";
+            }
+            if(check == 3){
+                lblContactName3.text = @"Sin Nombre";
+            }
+            if(check == 4){
+                lblUserOROwnerName.text = @"Sin Nombre";
+            }
+        }
+    }
+    else {
+        NSLog(@"Access denined.");
+    }
+    if(check==1){
         lblContactNumber1.text = contact;
     }
-    if(i==2){
+    if(check==2){
         lblContactNumber2.text = contact;
     }
-    if(i==3){
+    if(check==3){
         lblContactNumber3.text = contact;
     }
 }
@@ -328,10 +395,19 @@ MyAppAppDelegate *mAppDelegate;
     else{
         NSMutableString* phone;
         if([(__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonPhoneProperty)) count] > 1){
-            fullName =[NSString stringWithFormat:@"%@ %@", (name ? name :[NSString stringWithFormat:@" "]),(lastName ? lastName :[NSString stringWithFormat:@""])];
-            UIActionSheet *actionSheetView = [[UIActionSheet alloc] initWithTitle:@"Choose one of the contact number..!"
+            fullName =[NSString stringWithFormat:@"%@ %@", (name ? name :[NSString stringWithFormat:@""]),(lastName ? lastName :[NSString stringWithFormat:@""])];
+            UIActionSheet *actionSheetView = [[UIActionSheet alloc] initWithTitle:@"Elija uno de los números de contacto ..!"
                                                                          delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil
                                                                 otherButtonTitles:nil];
+//            actionSheetView.frame = CGRectMake(0, 0, 320, 480);
+//            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+//            if ([window.subviews containsObject:self.view]) {
+//                [actionSheetView showInView:self.view];
+//            } else {
+//                [actionSheetView showInView:window];
+//            }
+//            [actionSheetView showInView:[[[[UIApplication sharedApplication] keyWindow] subviews] lastObject]];
+//            [actionSheetView showFromRect:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width,[[UIScreen mainScreen] bounds].size.height) inView:self.view animated:YES];
             for(NSString *str in (((__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonPhoneProperty))))){
                 [actionSheetView addButtonWithTitle:str];
             }
@@ -347,7 +423,7 @@ MyAppAppDelegate *mAppDelegate;
             NSCharacterSet *notAllowedChars = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
             phone = [NSMutableString stringWithFormat:@"%@",[[phone componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""]];
             NSLog(@"Phone:%@",phone);
-            fullName =[NSString stringWithFormat:@"%@ %@", (name ? name :[NSString stringWithFormat:@" "]),(lastName ? lastName :[NSString stringWithFormat:@""])];
+            fullName =[NSString stringWithFormat:@"%@ %@", (name ? name :[NSString stringWithFormat:@""]),(lastName ? lastName :[NSString stringWithFormat:@""])];
             [self addMobileNumber:fullName withNumber:phone];
         }
     }
@@ -594,6 +670,7 @@ MyAppAppDelegate *mAppDelegate;
     lAlarmParam.longitude = longitude;
     lAlarmParam.username = [lMobileData stringForKey:@"kPrefKeyForUpdatedUsername"];
     lAlarmParam.userNumber = [lMobileData stringForKey:@"kPrefKeyForPhone"];
+    lAlarmParam.ownerNumber = lblUserNumber.text;
     [self addProgressIndicator];
     [self showProgressIndicator];
     AddAlarmModel *lAddAlarm = [AddAlarmModel getAddAlarmModel];

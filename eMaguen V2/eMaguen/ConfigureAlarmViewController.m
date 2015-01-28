@@ -157,7 +157,9 @@ MyAppAppDelegate *mAppDelegate;
 }
 
 - (IBAction)BnAlarmEditTapped:(id)sender{
+    if(mAlarmDetails != nil){
     [mAppDelegate setEditAlarmVCWithAlarmNameNumber:mAlarmDetails];
+    }
 }
 
 -(void)VolumeDone{

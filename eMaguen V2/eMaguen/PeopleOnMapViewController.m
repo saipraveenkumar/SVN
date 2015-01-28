@@ -15,6 +15,8 @@
 #import "EventsViewController.h"
 #import "SendLoc.h"
 
+#define  PEOPLE_LOCATION_DETAILS_URL @"GetUsuarioUbicacion?Id=%@"
+
 MyAppAppDelegate *mAppDelegate;
 
 @interface PeopleOnMapViewController (){
@@ -104,6 +106,7 @@ MyAppAppDelegate *mAppDelegate;
             range+=20000;
         }
         if([mAppDelegate alertSharingLocation] == 0){
+            if(temp == 0){
             lMapView.showsUserLocation = YES;
             CLLocationCoordinate2D  tempCtrPoint;
             tempCtrPoint.latitude = loc.lattitude;
@@ -113,6 +116,7 @@ MyAppAppDelegate *mAppDelegate;
             [lMapView setRegion:adjusted_region animated:YES];
             [lMapView reloadInputViews];
             ++temp;
+            }
         }
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(callLocationService) object:nil];
         [self performSelector:@selector(callLocationService) withObject:nil afterDelay:5];

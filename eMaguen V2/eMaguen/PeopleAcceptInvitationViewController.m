@@ -185,7 +185,7 @@ MyAppAppDelegate *mAppAppDelegate;
 }
 
 - (void)deallocMemory{
-    mInvitationDetails = nil;
+//    mInvitationDetails = nil;
 }
 
 @end

@@ -97,6 +97,7 @@ MyAppAppDelegate *mAppDelegate;
                 lAlarmParam.longitude = [NSString stringWithFormat:@"%f",anntLong];
                 lAlarmParam.username = [mAlaramDetails objectAtIndex:9];
                 lAlarmParam.userNumber = [mAlaramDetails objectAtIndex:10];
+                lAlarmParam.ownerNumber = [mAlaramDetails objectAtIndex:11];
                 [self addProgressIndicator];
                 [self showProgressIndicator];
                 AddAlarmModel *lAddAlarm = [AddAlarmModel getAddAlarmModel];

@@ -148,7 +148,7 @@ MyAppAppDelegate *mAppDelegate;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     NSDictionary *lArray1 = [alarmArray objectAtIndex:indexPath.row];
-    [mAppDelegate setConfigureAlarmVCWithAlarmName:[NSArray arrayWithObjects:[lArray1 objectForKey:@"AlarmName"],[lArray1 objectForKey:@"AlarmPhoneNumber"],[lArray1 objectForKey:@"Lat"], [lArray1 objectForKey:@"Lang"],[lArray1 objectForKey:@"Number1"],[lArray1 objectForKey:@"Number2"],[lArray1 objectForKey:@"Number3"],[lArray1 objectForKey:@"Number4"],[lArray1 objectForKey:@"Number5"],[lArray1 objectForKey:@"UserName"],[lArray1 objectForKey:@"UserNumber"],nil]];
+    [mAppDelegate setConfigureAlarmVCWithAlarmName:[NSArray arrayWithObjects:[lArray1 objectForKey:@"AlarmName"],[lArray1 objectForKey:@"AlarmPhoneNumber"],[lArray1 objectForKey:@"Lat"], [lArray1 objectForKey:@"Lang"],[lArray1 objectForKey:@"Number1"],[lArray1 objectForKey:@"Number2"],[lArray1 objectForKey:@"Number3"],[lArray1 objectForKey:@"Number4"],[lArray1 objectForKey:@"Number5"], [lArray1 objectForKey:@"UserName"],[lArray1 objectForKey:@"UserNumber"], [lArray1 objectForKey:@"OwnerNumber"],nil]];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {

@@ -368,7 +368,7 @@ NSArray *lUniqueTag;
         NSError *error;
         NSDictionary *lJSONArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
         NSLog(@"%@",lJSONArray);
-        [self setConfigureAlarmVCWithAlarmName:[NSArray arrayWithObjects:[lJSONArray objectForKey:@"AlarmName"], [lJSONArray objectForKey:@"AlarmPhoneNumber"], [lJSONArray objectForKey:@"Lat"], [lJSONArray objectForKey:@"Lang"], [lJSONArray objectForKey:@"Number1"], [lJSONArray objectForKey:@"Number2"], [lJSONArray objectForKey:@"Number3"], [lJSONArray objectForKey:@"Number4"], [lJSONArray objectForKey:@"Number5"], [lJSONArray objectForKey:@"UserName"], [lJSONArray objectForKey:@"UserNumber"], nil]];
+        [self setConfigureAlarmVCWithAlarmName:[NSArray arrayWithObjects:[lJSONArray objectForKey:@"AlarmName"], [lJSONArray objectForKey:@"AlarmPhoneNumber"], [lJSONArray objectForKey:@"Lat"], [lJSONArray objectForKey:@"Lang"], [lJSONArray objectForKey:@"Number1"], [lJSONArray objectForKey:@"Number2"], [lJSONArray objectForKey:@"Number3"], [lJSONArray objectForKey:@"Number4"], [lJSONArray objectForKey:@"Number5"], [lJSONArray objectForKey:@"UserName"], [lJSONArray objectForKey:@"UserNumber"], [lJSONArray objectForKey:@"OwnerNumber"], nil]];
     }
     else{
         NSLog(@"Fail in fetching the alarm details.");
@@ -708,7 +708,14 @@ NSArray *lUniqueTag;
     LeftController *leftVC = [[LeftController alloc]init];
     rootController.leftViewController = leftVC;
     navController.navigationBarHidden= YES;
-    self.window.rootViewController = rootController;
+    [UIView transitionWithView:self.window
+                      duration:0.5
+                       options: UIViewAnimationOptionTransitionFlipFromRight
+                    animations:^{
+                        self.window.rootViewController = rootController;
+                    }
+                    completion:nil];
+//    self.window.rootViewController = rootController;
     navController = nil;
     rootController = nil;
     leftVC = nil;
@@ -960,9 +967,6 @@ NSArray *lUniqueTag;
     self.window.rootViewController = lHomeVC;
     
 }
-
-
-
 
 @end
 

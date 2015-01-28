@@ -35,7 +35,7 @@ MyAppAppDelegate *mAppDelegate;
     ABPeoplePickerNavigationController *picker;
     int setController,smsCount ;
     ReverseGeocodeCountry *reverseGeocode;
-    NSString *countryName, *countryNumber;
+    NSString *countryName, *countryNumber, *fullName;
     BOOL isAssociatedAlarm;
     UIAlertView *alertBox;
 }
@@ -71,7 +71,7 @@ MyAppAppDelegate *mAppDelegate;
 {
     [self hideProgressIndicator];
     AddAlarmModel *lAddAlarm = [AddAlarmModel getAddAlarmModel];
-    if([lAddAlarm.alarmAdd isEqualToString:@"Successfully Added"]){
+    if([[lAddAlarm.alarmSettings objectForKey:@"ResponseMessage"] isEqualToString:@"Success"]){
         alertBox = [[UIAlertView alloc]initWithTitle:lblAlarmName.text message:@"Se ha actualizado con éxito" delegate:self cancelButtonTitle:@"Aceptar" otherButtonTitles: nil];
         alertBox.tag = 1;
         [alertBox show];
@@ -85,7 +85,6 @@ MyAppAppDelegate *mAppDelegate;
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if(alertView.tag == 1){
         if(isAssociatedAlarm == YES){
-            alarmNumbers = nil;
             [mAppDelegate setChooseAlarmViewController];
         }
         else{
@@ -95,26 +94,21 @@ MyAppAppDelegate *mAppDelegate;
             if(![lblContact1.text isEqualToString:[mAlaramDetails objectAtIndex:5]]){
                 //            [mobileArray addObject:lblContact1.text];
                 setController = 1;
-                [mobileArray addObject:lblContact1.text];
-            }
-            else{
-                [mobileArray addObject:NO_CONTACT];
+                if(![lblContact1.text isEqualToString:@""]){
+                    [mobileArray addObject:[[NSDictionary alloc]initWithObjectsAndKeys:lblContactName1.text,@"name",lblContact1.text, @"phone", nil]];
+                }
             }
             if(![lblContact2.text isEqualToString:[mAlaramDetails objectAtIndex:6]]){
                 //            [mobileArray addObject:lblContact1.text];
                 setController = 1;
-                [mobileArray addObject:lblContact2.text];
-            }
-            else{
-                [mobileArray addObject:NO_CONTACT];
+                if(![lblContact2.text isEqualToString:@""])
+                [mobileArray addObject:[[NSDictionary alloc]initWithObjectsAndKeys:lblContactName2.text,@"name",lblContact2.text, @"phone", nil]];
             }
             if(![lblContact3.text isEqualToString:[mAlaramDetails objectAtIndex:7]]){
                 //            [mobileArray addObject:lblContact1.text];
                 setController = 1;
-                [mobileArray addObject:lblContact3.text];
-            }
-            else{
-                [mobileArray addObject:NO_CONTACT];
+                if(![lblContact3.text isEqualToString:@""])
+                [mobileArray addObject:[[NSDictionary alloc]initWithObjectsAndKeys:lblContactName3.text,@"name",lblContact3.text, @"phone", nil]];
             }
             NSArray *recipents = [NSArray arrayWithObject:[mAlaramDetails objectAtIndex:1]];//alarmSimNumber
             NSUserDefaults *lData = [NSUserDefaults standardUserDefaults];
@@ -130,15 +124,15 @@ MyAppAppDelegate *mAppDelegate;
         }
     }
     else if (alertView.tag == 2){
-//        if(smsCount == 1){
-            if(setController == 1){
-                [mAppDelegate setSendRequestVCWithMobileNumbers:mobileArray];
-                mobileArray = nil;
-            }
-            else{
-                [mAppDelegate setChooseAlarmViewController];
-            }
-//        }
+        //        if(smsCount == 1){
+        if(setController == 1){
+            [mAppDelegate setSendRequestVCWithMobileNumbers:mobileArray];
+            mobileArray = nil;
+        }
+        else{
+            [mAppDelegate setChooseAlarmViewController];
+        }
+        //        }
     }
 }
 
@@ -146,15 +140,18 @@ MyAppAppDelegate *mAppDelegate;
 {
     switch (result) {
         case MessageComposeResultCancelled:
-//            if(smsCount == 1){
-                if(setController == 1){
-                    [mAppDelegate setSendRequestVCWithMobileNumbers:mobileArray];
-                    mobileArray = nil;
-                }
-                else{
+            //            if(smsCount == 1){
+            if(setController == 1){
+                if([mobileArray count]>1)
+                [mAppDelegate setSendRequestVCWithMobileNumbers:mobileArray];
+                else
                     [mAppDelegate setChooseAlarmViewController];
-                }
-//            }
+                mobileArray = nil;
+            }
+            else{
+                [mAppDelegate setChooseAlarmViewController];
+            }
+            //            }
             break;
             
         case MessageComposeResultFailed:
@@ -166,14 +163,18 @@ MyAppAppDelegate *mAppDelegate;
         }
             
         case MessageComposeResultSent:
-//            if(smsCount == 1){
-                if(setController == 1){
-                    [mAppDelegate setSendRequestVCWithMobileNumbers:mobileArray];
-                }
-                else{
+            //            if(smsCount == 1){
+            if(setController == 1){
+                if([mobileArray count]>1)
+                [mAppDelegate setSendRequestVCWithMobileNumbers:mobileArray];
+                else
                     [mAppDelegate setChooseAlarmViewController];
-                }
-//            }
+                mobileArray = nil;
+            }
+            else{
+                [mAppDelegate setChooseAlarmViewController];
+            }
+            //            }
             break;
             
         default:
@@ -181,18 +182,18 @@ MyAppAppDelegate *mAppDelegate;
     }
     
     [self dismissViewControllerAnimated:YES completion:nil];
-//    if(smsCount == 0){
-//        NSArray *recipents = [NSArray arrayWithObject:[mAlaramDetails objectAtIndex:1]];//alarmSimNumber
-//        NSString *message = [NSString stringWithFormat:@"Zone information:\n1.eMaguen\n2.eMaguen\n3.eMaguen\n4."];
-//        NSLog(@"\n%@",message);
-//        MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
-//        messageController.messageComposeDelegate = self;
-//        [messageController setRecipients:recipents];
-//        [messageController setBody:message];
-//        // Present message view controller on screen
-//        [self presentViewController:messageController animated:YES completion:nil];
-//        ++smsCount;
-//    }
+    //    if(smsCount == 0){
+    //        NSArray *recipents = [NSArray arrayWithObject:[mAlaramDetails objectAtIndex:1]];//alarmSimNumber
+    //        NSString *message = [NSString stringWithFormat:@"Zone information:\n1.eMaguen\n2.eMaguen\n3.eMaguen\n4."];
+    //        NSLog(@"\n%@",message);
+    //        MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
+    //        messageController.messageComposeDelegate = self;
+    //        [messageController setRecipients:recipents];
+    //        [messageController setBody:message];
+    //        // Present message view controller on screen
+    //        [self presentViewController:messageController animated:YES completion:nil];
+    //        ++smsCount;
+    //    }
 }
 
 
@@ -206,7 +207,7 @@ MyAppAppDelegate *mAppDelegate;
     [super viewDidLoad];
     
     if(!reverseGeocode)
-    reverseGeocode = [[ReverseGeocodeCountry alloc] init];
+        reverseGeocode = [[ReverseGeocodeCountry alloc] init];
     
     lblAlarmName.self.autocapitalizationType = UITextAutocapitalizationTypeSentences;
     
@@ -218,26 +219,30 @@ MyAppAppDelegate *mAppDelegate;
     [self.navigationController setToolbarHidden:YES];
     
     isAssociatedAlarm = NO;
-    if(!alarmNumbers)
-        alarmNumbers = [[NSMutableArray alloc]init];
-    for (int i = 5; i<=8; i++) {
-        [alarmNumbers addObject:[mAlaramDetails objectAtIndex:i]];
-    }
-    for(NSString *str in alarmNumbers){
-        NSLog(@"%@ == %@",str,[mAlaramDetails lastObject]);
-        if(([str rangeOfString:[mAlaramDetails lastObject]].location != NSNotFound) || ([[mAlaramDetails lastObject] rangeOfString:str].location != NSNotFound) ){
-            isAssociatedAlarm = YES;
-            bnContact1.enabled = NO;
-            bnContact2.enabled = NO;
-            bnContact3.enabled = NO;
-            lblContact1.textColor = [UIColor grayColor];
-            lblContact2.textColor = [UIColor grayColor];
-            lblContact3.textColor = [UIColor grayColor];
-            break;
-        }
-    }
     
-    [self callService];
+    if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"kPrefKeyForPhone"] isEqualToString:[mAlaramDetails lastObject]]){
+        isAssociatedAlarm = YES;
+        bnContact1.enabled = NO;
+        bnContact2.enabled = NO;
+        bnContact3.enabled = NO;
+        lblEditMap.enabled = NO;
+        lblContact1.textColor = [UIColor grayColor];
+        lblContact2.textColor = [UIColor grayColor];
+        lblContact3.textColor = [UIColor grayColor];
+    }
+//    if(!alarmNumbers)
+//        alarmNumbers = [[NSMutableArray alloc]init];
+//    for (int i = 5; i<=8; i++) {
+//        [alarmNumbers addObject:[mAlaramDetails objectAtIndex:i]];
+//    }
+//    for(NSString *str in alarmNumbers){
+//        NSLog(@"%@ == %@",str,[mAlaramDetails objectAtIndex:[mAlaramDetails count]-1]);
+//        
+//    }
+    [self addProgressIndicator];
+    [self showProgressIndicator];
+    mLabelLoading.text = @"Cargando...";
+    [self performSelectorInBackground:@selector(callService) withObject:nil];
     
     tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleTap:)];
     [self.view addGestureRecognizer:tap];
@@ -248,14 +253,107 @@ MyAppAppDelegate *mAppDelegate;
 }
 
 - (void)callService{
-    
     lblAlarmName.delegate = self;
-    
     lblAlarmName.text = [[mAlaramDetails objectAtIndex:0] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    lblUserNumber.text = [mAlaramDetails objectAtIndex:10];
-    lblContact1.text = ([mAlaramDetails objectAtIndex:5] ? [mAlaramDetails objectAtIndex:5] :@"Sin contacto");
-    lblContact2.text = ([mAlaramDetails objectAtIndex:6] ? [mAlaramDetails objectAtIndex:6] :@"Sin contacto");
-    lblContact3.text = ([mAlaramDetails objectAtIndex:7] ? [mAlaramDetails objectAtIndex:7] :@"Sin contacto");
+    lblUserNumber.text = [mAlaramDetails lastObject];
+    [self getContactName:4 andNumber:lblUserNumber.text];
+    if([[mAlaramDetails objectAtIndex:5] isEqualToString:@"Sin Contacto"] || [[mAlaramDetails objectAtIndex:5] isEqualToString:@""] || [[mAlaramDetails objectAtIndex:5] isEqualToString:@" "]){
+        if(isAssociatedAlarm == YES){
+            //            [bnContact1 setTitle:@"Sin Contacto" forState:UIControlStateNormal];
+            //            [bnContact1 setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        }
+        else{
+            [bnContact1 setTitle:@"Agregar Contacto" forState:UIControlStateNormal];
+        }
+    }
+    else{
+        lblContact1.text = [mAlaramDetails objectAtIndex:5];
+        [self getContactName:1 andNumber:lblContact1.text];
+    }
+    if([[mAlaramDetails objectAtIndex:6] isEqualToString:@"Sin Contacto"] || [[mAlaramDetails objectAtIndex:6] isEqualToString:@""] || [[mAlaramDetails objectAtIndex:6] isEqualToString:@" "]){
+        if(isAssociatedAlarm == YES){
+            //            [bnContact2 setTitle:@"Sin Contacto" forState:UIControlStateNormal];
+            //            [bnContact2 setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        }
+        else{
+            [bnContact2 setTitle:@"Agregar Contacto" forState:UIControlStateNormal];
+        }
+    }
+    else{
+        lblContact2.text = [mAlaramDetails objectAtIndex:6];
+        [self getContactName:2 andNumber:lblContact2.text];
+    }
+    if([[mAlaramDetails objectAtIndex:7] isEqualToString:@"Sin Contacto"] || [[mAlaramDetails objectAtIndex:7] isEqualToString:@""] || [[mAlaramDetails objectAtIndex:7] isEqualToString:@" "]){
+        if(isAssociatedAlarm == YES){
+            //            [bnContact3 setTitle:@"Sin Contacto" forState:UIControlStateNormal];
+            //            [bnContact3 setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        }
+        else{
+            [bnContact3 setTitle:@"Agregar Contacto" forState:UIControlStateNormal];
+        }
+    }
+    else{
+        lblContact3.text = [mAlaramDetails objectAtIndex:7];
+        [self getContactName:3 andNumber:lblContact3.text];
+    }
+    [self hideProgressIndicator];
+}
+
+- (void)getContactName:(int)check andNumber:(NSString *)contact{
+    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
+        ABAddressBookRequestAccessWithCompletion(addressBookRef, ^(bool granted, CFErrorRef error) {
+            ABAddressBookRef addressBook = ABAddressBookCreate( );
+        });
+    }
+    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
+        int found = 0;
+        CFErrorRef *error = NULL;
+        ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, error);
+        CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
+        CFIndex numberOfPeople = ABAddressBookGetPersonCount(addressBook);
+        for(int i = 0; i < numberOfPeople; i++) {
+            ABRecordRef person = CFArrayGetValueAtIndex( allPeople, i );
+            ABMultiValueRef phoneNumbers = ABRecordCopyValue(person, kABPersonPhoneProperty);
+            for (CFIndex i = 0; i < ABMultiValueGetCount(phoneNumbers); i++) {
+                NSCharacterSet *notAllowedChars = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
+                NSString *phoneNumber = (__bridge_transfer NSString *) ABMultiValueCopyValueAtIndex(phoneNumbers, i);
+//                NSLog(@"Number: %@",[[phoneNumber componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""]);
+                if(([[[phoneNumber componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""] rangeOfString:contact].location != NSNotFound) || ([contact rangeOfString:[[phoneNumber componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""]].location != NSNotFound))
+                {
+                    NSLog(@"Found");
+                    found = 1;
+                    if(check == 1){
+                        lblContactName1.text =[NSString stringWithFormat:@"%@ %@", ((__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) :[NSString stringWithFormat:@""]),((__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) :[NSString stringWithFormat:@""])];
+                    }
+                    if(check == 2){
+                        lblContactName2.text =[NSString stringWithFormat:@"%@ %@", ((__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) :[NSString stringWithFormat:@""]),((__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) :[NSString stringWithFormat:@""])];
+                    }
+                    if(check == 3){
+                        lblContactName3.text =[NSString stringWithFormat:@"%@ %@", ((__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) :[NSString stringWithFormat:@""]),((__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) :[NSString stringWithFormat:@""])];
+                    }
+                    if(check == 4){
+                        lblUserOROwner.text =[NSString stringWithFormat:@"%@ %@", ((__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) :[NSString stringWithFormat:@""]),((__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) :[NSString stringWithFormat:@""])];
+                    }
+                    break;
+                }
+            }
+        }
+        if(found == 0){
+            if(check == 1){
+                lblContactName1.text = @"Sin Nombre";
+            }
+            if(check == 2){
+                lblContactName2.text = @"Sin Nombre";
+            }
+            if(check == 3){
+                lblContactName3.text = @"Sin Nombre";
+            }
+        }
+    }
+    else {
+        NSLog(@"Access denined.");
+    }
 }
 
 - (IBAction)BnDetailsUpdate:(id)sender{
@@ -270,7 +368,6 @@ MyAppAppDelegate *mAppDelegate;
         }
         else{
             [picker removeFromParentViewController];
-            
             [self addProgressIndicator];
             [self showProgressIndicator];
             
@@ -278,14 +375,14 @@ MyAppAppDelegate *mAppDelegate;
             lAlarmParam.alarmName = [lblAlarmName.text stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             lAlarmParam.alarmNumber = [mAlaramDetails objectAtIndex:1];
             lAlarmParam.number1 = [mAlaramDetails objectAtIndex:4];
-            lAlarmParam.number2 = lblContact1.text;
-            lAlarmParam.number3 = lblContact2.text;
-            lAlarmParam.number4 = lblContact3.text;
+            lAlarmParam.number2 = (![lblContact1.text isEqualToString:@""]?lblContact1.text:@"Sin Contacto");
+            lAlarmParam.number3 = (![lblContact2.text isEqualToString:@""]?lblContact2.text:@"Sin Contacto");
+            lAlarmParam.number4 = (![lblContact3.text isEqualToString:@""]?lblContact3.text:@"Sin Contacto");
             lAlarmParam.lattitude = [mAlaramDetails objectAtIndex:2];
             lAlarmParam.longitude = [mAlaramDetails objectAtIndex:3];
             lAlarmParam.username = [mAlaramDetails objectAtIndex:9];
             lAlarmParam.userNumber = [mAlaramDetails objectAtIndex:10];
-            
+            lAlarmParam.ownerNumber = lblUserNumber.text;
             AddAlarmModel *lAddAlarm = [AddAlarmModel getAddAlarmModel];
             [lAddAlarm callGetUpdateAlarmWebservice:lAlarmParam];
             mLabelLoading.text = @"Gurdando...";
@@ -296,10 +393,11 @@ MyAppAppDelegate *mAppDelegate;
 -(IBAction)BnBackTapped:(id)sender{
     //    [picker removeFromParentViewController];
     [mAppDelegate setConfigureAlarmVCWithAlarmName:mAlaramDetails];
+    mAlaramDetails = nil;
 }
 
 - (IBAction)BnEditMapTapped:(id)sender{
-    [mAppDelegate setEditAlarmMapVCWithAlarmDetails:[NSArray arrayWithObjects:lblAlarmName.text,[mAlaramDetails objectAtIndex:1],[mAlaramDetails objectAtIndex:2],[mAlaramDetails objectAtIndex:3],[mAlaramDetails objectAtIndex:4],lblContact1.text,lblContact2.text,lblContact3.text,[mAlaramDetails objectAtIndex:8],[mAlaramDetails objectAtIndex:9],[mAlaramDetails objectAtIndex:10], nil]];
+    [mAppDelegate setEditAlarmMapVCWithAlarmDetails:[NSArray arrayWithObjects:lblAlarmName.text,[mAlaramDetails objectAtIndex:1],[mAlaramDetails objectAtIndex:2],[mAlaramDetails objectAtIndex:3],[mAlaramDetails objectAtIndex:4],lblContact1.text,lblContact2.text,lblContact3.text,[mAlaramDetails objectAtIndex:8],[mAlaramDetails objectAtIndex:9],[mAlaramDetails objectAtIndex:10], [mAlaramDetails objectAtIndex:11], nil]];
 }
 
 //hiding status bar
@@ -312,11 +410,107 @@ MyAppAppDelegate *mAppDelegate;
 - (IBAction)BnEditContact:(id)sender{
     UIButton *button = sender;
     buttonTag = (int)button.tag;
+    if(buttonTag == 0){
+        if([lblContact1.text isEqualToString:@""]){
+            [self openPickerForContact];
+        }
+        else{
+            [self chooseOptionForContact];
+        }
+    }
+    if(buttonTag == 1){
+        if([lblContact2.text isEqualToString:@""]){
+            [self openPickerForContact];
+        }
+        else{
+            [self chooseOptionForContact];
+        }
+    }
+    if(buttonTag == 2){
+        if([lblContact3.text isEqualToString:@""]){
+            [self openPickerForContact];
+        }
+        else{
+            [self chooseOptionForContact];
+        }
+    }
+}
+
+- (void)chooseOptionForContact{
+    UIActionSheet *actionSheetView = [[UIActionSheet alloc] initWithTitle:@"¿ Elija su opción ?"
+                                                                 delegate:self cancelButtonTitle:@"Cancelar" destructiveButtonTitle:nil
+                                                        otherButtonTitles:@"Cambio Contacto", @"Eliminar Contacto", nil];
+    actionSheetView.tag = 1;
+    actionSheetView.actionSheetStyle = UIActionSheetStyleAutomatic;
+    [actionSheetView showInView:self.view];
+}
+
+- (void)openPickerForContact{
     if(!picker){
         picker=[[ABPeoplePickerNavigationController alloc] init];
     }
     picker.peoplePickerDelegate = self;
     [self presentViewController:picker animated:YES completion:nil];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if(actionSheet.tag == 1){
+        if(buttonIndex == 0){
+            if(!picker){
+                picker=[[ABPeoplePickerNavigationController alloc] init];
+            }
+            picker.peoplePickerDelegate = self;
+            [self presentViewController:picker animated:YES completion:nil];
+        }
+        else if (buttonIndex == 1){
+            [self deleteContact];
+        }
+    }
+    else if(actionSheet.tag == 101){
+        if(buttonIndex != actionSheet.destructiveButtonIndex){
+            NSLog(@"%@",[actionSheet buttonTitleAtIndex:buttonIndex]);
+            NSCharacterSet *notAllowedChars = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
+            [self addMobileNumber:fullName withNumber:([[[actionSheet buttonTitleAtIndex:buttonIndex] componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""])];
+        }
+    }
+}
+
+- (void)deleteContact{
+    if(buttonTag == 0){
+        if([lblContact2.text isEqualToString:@""]){
+            lblContact1.text = @"";
+            lblContactName1.text = @"";
+            [bnContact1 setTitle:@"Agregar Contacto" forState:UIControlStateNormal];
+        }
+        else{
+            lblContact1.text = lblContact2.text;
+            lblContactName1.text = lblContactName2.text;
+            [self contactThreeCheck];
+        }
+    }
+    if(buttonTag == 1){
+        [self contactThreeCheck];
+    }
+    if(buttonTag == 2){
+        lblContact3.text = @"";
+        lblContactName3.text = @"";
+        [bnContact3 setTitle:@"Agregar Contacto" forState:UIControlStateNormal];
+    }
+}
+
+- (void)contactThreeCheck{
+    if([lblContact3.text isEqualToString:@""]){
+        lblContactName2.text = @"";
+        lblContact2.text = @"";
+        [bnContact2 setTitle:@"Agregar Contacto" forState:UIControlStateNormal];
+    }
+    else{
+        lblContact2.text = lblContact3.text;
+        lblContactName2.text = lblContactName3.text;
+        lblContactName3.text = @"";
+        lblContact3.text = @"";
+        [bnContact3 setTitle:@"Agregar Contacto" forState:UIControlStateNormal];
+    }
 }
 
 -(BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker
@@ -346,42 +540,60 @@ MyAppAppDelegate *mAppDelegate;
 - (void)displayPerson:(ABRecordRef)person
 {
     //    [self performSelector:nil withObject:nil afterDelay:2];
-    NSMutableArray *numbers = [[NSMutableArray alloc]init];
-    ABMultiValueRef phones = ABRecordCopyValue(person, kABPersonPhoneProperty);
-    for(CFIndex j = 0; j < ABMultiValueGetCount(phones); j++)
-    {
-        CFStringRef phoneNumberRef = ABMultiValueCopyValueAtIndex(phones, j);
-        CFStringRef locLabel = ABMultiValueCopyLabelAtIndex(phones, j);
-        NSString *phoneLabel =(__bridge NSString*) ABAddressBookCopyLocalizedLabel(locLabel);
-        //CFRelease(phones);
-        NSString *phoneNumber = (__bridge NSString *)phoneNumberRef;
-        CFRelease(phoneNumberRef);
-        CFRelease(locLabel);
-        NSLog(@"  - %@ (%@)", phoneNumber, phoneLabel);
-        [numbers addObject:phoneNumber];
-    }
-    if([numbers count]<=0){
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    if(([(__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonPhoneProperty)) count]<=0)){
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Atención" message:@"Este contacto no tiene un teléfono asociado" delegate:self cancelButtonTitle:@"Aceptar" otherButtonTitles: nil];
         [alert show];
     }
     else{
-        NSCharacterSet *notAllowedChars = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
-        NSString* phone = [[[numbers objectAtIndex:0] componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""];
-        NSLog(@"Phone:%@",phone);
-        NSUserDefaults *lData = [NSUserDefaults standardUserDefaults];
-        if([lblContact1.text isEqualToString:phone] || [lblContact2.text isEqualToString:phone] || [lblContact3.text isEqualToString:phone] || ([phone rangeOfString:[lData objectForKey:@"kPrefKeyForPhone"]].location != NSNotFound) || ([[lData objectForKey:@"kPrefKeyForPhone"] rangeOfString:phone].location != NSNotFound)){
-            [self contactExists];
+        NSMutableString* phone;
+        if([(__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonPhoneProperty)) count] > 1){
+            fullName = [NSString stringWithFormat:@"%@ %@", ((__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) :[NSString stringWithFormat:@""]),((__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) :[NSString stringWithFormat:@""])];
+            UIActionSheet *actionSheetView = [[UIActionSheet alloc] initWithTitle:@"Elija uno de los números de contacto ..!"
+                                                                         delegate:self cancelButtonTitle:@"Cancelar" destructiveButtonTitle:nil
+                                                                otherButtonTitles:nil];
+            for(NSString *str in (((__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonPhoneProperty))))){
+                [actionSheetView addButtonWithTitle:str];
+            }
+            actionSheetView.tag = 101;
+            actionSheetView.actionSheetStyle = UIActionSheetStyleAutomatic;
+            [actionSheetView showInView:self.view];
         }
         else{
-            if(buttonTag == 0){
-                lblContact1.text = phone;
-            }
-            else if (buttonTag == 1){
-                lblContact2.text = phone;
-            }
-            else if (buttonTag == 2){
-                lblContact3.text = phone;
-            }
+            if(!phone)
+                phone= [[NSMutableString alloc]initWithString:[(__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonPhoneProperty)) objectAtIndex:0]];
+            fullName = [NSString stringWithFormat:@"%@ %@", ((__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) :[NSString stringWithFormat:@""]),((__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) :[NSString stringWithFormat:@""])];
+            NSCharacterSet *notAllowedChars = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
+            phone = [NSMutableString stringWithFormat:@"%@",[[phone componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""]];
+            NSLog(@"Phone:%@",phone);
+            [self addMobileNumber:fullName withNumber:phone];
+        }
+    }
+}
+
+- (void)addMobileNumber:(NSString *)name withNumber:(NSString *)number{
+    NSCharacterSet *notAllowedChars = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
+    NSString* phone = [[number componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""];
+    NSLog(@"Phone:%@",phone);
+    NSUserDefaults *lData = [NSUserDefaults standardUserDefaults];
+    if([lblContact1.text isEqualToString:phone] || [lblContact2.text isEqualToString:phone] || [lblContact3.text isEqualToString:phone] || ([phone rangeOfString:[lData objectForKey:@"kPrefKeyForPhone"]].location != NSNotFound) || ([[lData objectForKey:@"kPrefKeyForPhone"] rangeOfString:phone].location != NSNotFound)){
+        [self contactExists];
+    }
+    else{
+        if(buttonTag == 0){
+            lblContactName1.text = name;
+            lblContact1.text = phone;
+            [bnContact1 setTitle:@"" forState:UIControlStateNormal];
+        }
+        else if (buttonTag == 1){
+            lblContactName2.text = name;
+            lblContact2.text = phone;
+            [bnContact2 setTitle:@"" forState:UIControlStateNormal];
+        }
+        else if (buttonTag == 2){
+            lblContactName3.text = name;
+            lblContact3.text = phone;
+            [bnContact3 setTitle:@"" forState:UIControlStateNormal];
         }
     }
 }

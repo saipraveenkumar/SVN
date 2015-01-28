@@ -143,7 +143,7 @@ MyAppAppDelegate *mAppDelegate;
 }
 
 -(IBAction)BnTwitterTapped:(id)sender{
-    if([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
+//    if([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
     
         SLComposeViewController *controller = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
         
@@ -176,11 +176,11 @@ MyAppAppDelegate *mAppDelegate;
                     break;
             }
          }];
-    }
-    else{
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Atención" message:@"Por favor, configurar los ajustes de Twitter." delegate:self cancelButtonTitle:@"Aceptar" otherButtonTitles: nil];
-        [alert show];
-    }
+//    }
+//    else{
+//        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Atención" message:@"Por favor, configurar los ajustes de Twitter." delegate:self cancelButtonTitle:@"Aceptar" otherButtonTitles: nil];
+//        [alert show];
+//    }
 }
 
 -(IBAction)BnWhatsappTapped:(id)sender{

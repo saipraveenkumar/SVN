@@ -48,7 +48,7 @@ MyAppAppDelegate *mAppAppDelegate;
             [view removeFromSuperview];
         }
     }
-    for(int i =0;i<[[groupData objectForKey:@"GroupMemberCount"] intValue] - 1;i++){
+    for(int i =0;i<[[groupData objectForKey:@"GroupMemberCount"] intValue];i++){
         if(![[lUserData objectForKey:@"kPrefKeyForUpdatedUsername"] isEqualToString:[namesData objectAtIndex:i]]){
             NSMutableString *latLong = [[NSMutableString alloc]initWithString:[latLongData objectAtIndex:i]];
             [latLong substringWithRange:NSMakeRange(1, latLong.length-2)];

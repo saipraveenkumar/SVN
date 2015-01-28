@@ -42,6 +42,7 @@
     NSString            *mLattitude;
     NSString            *mUsername;
     NSString            *mUserNumber;
+    NSString            *mOwnerNumber;
 }
 
 @property (nonatomic, copy) NSString *alarmNumber;
@@ -54,4 +55,5 @@
 @property (nonatomic, copy) NSString *longitude;
 @property (nonatomic, copy) NSString *username;
 @property (nonatomic, copy) NSString *userNumber;
+@property (nonatomic, copy) NSString *ownerNumber;
 @end

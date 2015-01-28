@@ -11,9 +11,9 @@
 #import "NSString+SBJSON.h"
 #import "NSObject+NSClassMethod.h"
 
-#define ADDALARM_URL @"AlarmAgregar?AlarmName=%@&AlarmPhoneNumber=%@&Lat=%@&Lang=%@&Number1=%@&Number2=%@&Number3=%@&Number4=%@&UserNumber=%@&UserName=%@"
+#define ADDALARM_URL @"AlarmAgregar?AlarmName=%@&AlarmPhoneNumber=%@&Lat=%@&Lang=%@&Number1=%@&Number2=%@&Number3=%@&Number4=%@&UserNumber=%@&UserName=%@&OwnerNumber=%@"
 
-#define UPDATEALARM_URL @"AlarmAgregar?AlarmName=%@&AlarmPhoneNumber=%@&Lat=%@&Lang=%@&Number1=%@&Number2=%@&Number3=%@&Number4=%@&UserNumber=%@&UserName=%@"
+#define UPDATEALARM_URL @"AlarmAgregar?AlarmName=%@&AlarmPhoneNumber=%@&Lat=%@&Lang=%@&Number1=%@&Number2=%@&Number3=%@&Number4=%@&UserNumber=%@&UserName=%@&OwnerNumber=%@"
 
 @implementation AddAlarmModel
 
@@ -43,7 +43,7 @@ static AddAlarmModel *sGetAddAlarmModel = nil;
     
     //    UserDataModel *lUserDataModel = [UserDataModel getUserDataModel];
     
-    NSString *lLoginParams = [NSString stringWithFormat:ADDALARM_URL,param.alarmName,param.alarmNumber,param.lattitude,param.longitude,param.number1,param.number2,param.number3,param.number4,param.userNumber,param.username];
+    NSString *lLoginParams = [NSString stringWithFormat:ADDALARM_URL,param.alarmName,param.alarmNumber,param.lattitude,param.longitude,param.number1,param.number2,param.number3,param.number4,param.userNumber,param.username,param.ownerNumber];
     NSString *newString = [lLoginParams stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString *lServiceURL1 = [NSString stringWithFormat:@"%@%@",lServiceURL,newString];
     NSURL *lURL = [[NSURL alloc] initWithString: lServiceURL1];
@@ -65,7 +65,7 @@ static AddAlarmModel *sGetAddAlarmModel = nil;
     
     //    UserDataModel *lUserDataModel = [UserDataModel getUserDataModel];
     
-    NSString *lLoginParams = [NSString stringWithFormat:UPDATEALARM_URL,param.alarmName,param.alarmNumber,param.lattitude,param.longitude,param.number1,param.number2,param.number3,param.number4,param.userNumber,param.username];
+    NSString *lLoginParams = [NSString stringWithFormat:UPDATEALARM_URL,param.alarmName,param.alarmNumber,param.lattitude,param.longitude,param.number1,param.number2,param.number3,param.number4,param.userNumber,param.username,param.ownerNumber];
     NSString *newString = [lLoginParams stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString *lServiceURL1 = [NSString stringWithFormat:@"%@%@",lServiceURL,newString];
     NSURL *lURL = [[NSURL alloc] initWithString: lServiceURL1];
@@ -136,12 +136,10 @@ static AddAlarmModel *sGetAddAlarmModel = nil;
     }
     else if (connection == mUpdateConnection){
         NSError *error;
-        NSDictionary *lJSONArray = [NSJSONSerialization
+        mAlarmSettings = [NSJSONSerialization
                                     JSONObjectWithData:connection.ResponceData
                                     options:kNilOptions
                                     error:&error];
-        mAlarmAdd = [lJSONArray objectForKey:@"ResponseMessage"];
-        mAlarmZoneId = [lJSONArray objectForKey:@"EmprasaId"];
     }
 }
 
@@ -160,6 +158,7 @@ static AddAlarmModel *sGetAddAlarmModel = nil;
 @synthesize longitude = mLongitude;
 @synthesize alarmName = mAlarmName;
 @synthesize alarmNumber = mAlarmNumber;
+@synthesize ownerNumber = mOwnerNumber;
 
 - (void)dealloc
 {
@@ -173,6 +172,7 @@ static AddAlarmModel *sGetAddAlarmModel = nil;
     self.longitude = nil;
     self.alarmName = nil;
     self.alarmNumber = nil;
+    self.ownerNumber = nil;
 }
 
 @end

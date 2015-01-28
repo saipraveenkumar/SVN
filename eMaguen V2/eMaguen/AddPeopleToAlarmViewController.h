@@ -24,9 +24,8 @@
     IBOutlet UIImageView *contactDelete1IV;
     IBOutlet UIImageView *contactDelete2IV;
     IBOutlet UIImageView *contactDelete3IV;
-    IBOutlet UILabel *lblContactName1, *lblContactName2, *lblContactName3;
+    IBOutlet UILabel *lblContactName1, *lblContactName2, *lblContactName3, *lblUserOROwnerName;
     IBOutlet UILabel *lblContactNumber1, *lblContactNumber2, *lblContactNumber3;
-    
     IBOutlet UILabel *lblUserNumber;
     
 }

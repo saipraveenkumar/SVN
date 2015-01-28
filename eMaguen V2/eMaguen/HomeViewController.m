@@ -123,7 +123,12 @@ MyAppAppDelegate *mAppDelegate;
         ++count;
     }
     
-    lblUnreadNotifi.text = [NSString stringWithFormat:@"%d",[[[NSUserDefaults standardUserDefaults] objectForKey:@"kPrefKeyForNotificationCount"] intValue] - count];
+    if(([[[NSUserDefaults standardUserDefaults] objectForKey:@"kPrefKeyForNotificationCount"] intValue] - count)>0){
+        lblUnreadNotifi.text = [NSString stringWithFormat:@"%d",[[[NSUserDefaults standardUserDefaults] objectForKey:@"kPrefKeyForNotificationCount"] intValue] - count];
+    }
+    else{
+        lblUnreadNotifi.text = @"0";
+    }
     
     if([CLLocationManager authorizationStatus]==kCLAuthorizationStatusNotDetermined){
         NSLog(@"Not Determine.");
@@ -132,16 +137,6 @@ MyAppAppDelegate *mAppDelegate;
         [self performSelectorInBackground:@selector(alertAboutLocation) withObject:nil];
     }
 }
-
-//- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-//    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorized) {
-//        NSLog(@"Allowed");
-//    }
-//    else if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied){
-//        NSLog(@"Denined");
-//        [self alertLocationStatusDenined];
-//    }
-//}
 
 - (void)alertLocationStatusDenined{
     [[[UIAlertView alloc]initWithTitle:@"Attention" message:@"For adding fastevents and alarms, you need to share your location." delegate:self cancelButtonTitle:@"Aceptar" otherButtonTitles: nil] show];

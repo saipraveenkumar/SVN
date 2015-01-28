@@ -11,16 +11,21 @@
 #import <AddressBookUI/AddressBookUI.h>
 #import "ReverseGeocodeCountry.h"
 
-@interface EditAlarmViewController : RootViewController<ABPeoplePickerNavigationControllerDelegate,UITextFieldDelegate,UIAlertViewDelegate,MFMessageComposeViewControllerDelegate>
+@interface EditAlarmViewController : RootViewController<ABPeoplePickerNavigationControllerDelegate,UITextFieldDelegate,UIAlertViewDelegate,MFMessageComposeViewControllerDelegate, UIActionSheetDelegate>
 {
     IBOutlet UITextField *lblAlarmName;
     IBOutlet UILabel *lblContact1;
     IBOutlet UILabel *lblContact2;
     IBOutlet UILabel *lblContact3;
+    IBOutlet UILabel *lblContactName1;
+    IBOutlet UILabel *lblContactName2;
+    IBOutlet UILabel *lblContactName3;
     IBOutlet UIButton *bnContact1;
     IBOutlet UIButton *bnContact2;
     IBOutlet UIButton *bnContact3;
     IBOutlet UILabel *lblUserNumber;
+    IBOutlet UILabel *lblUserOROwner;
+    IBOutlet UIButton *lblEditMap;
 }
 - (void)setDetails:(NSArray*)alarmDetails;
 - (IBAction)BnDetailsUpdate:(id)sender;

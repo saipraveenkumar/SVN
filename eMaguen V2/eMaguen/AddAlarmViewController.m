@@ -69,7 +69,7 @@ NSString *countryName;
                 match = 0;
             }
             else{
-                for(int i = 1; i<[mobileNumbers count]-1;i++){
+                for(int i = 1; i<[mobileNumbers count];i++){
                     NSString *mobile;
                     mobile = [mobileNumbers objectAtIndex:i];
                     NSLog(@"%@ == %@",mobile,[lData objectForKey:@"kPrefKeyForPhone"]);
