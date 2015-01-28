@@ -968,6 +968,19 @@ NSArray *lUniqueTag;
     
 }
 
+//- (void)setAddCommentsVCAsWindowRootVCWithEventId:(int)lEventID{
+//    [self clearXibResources];
+//    AddCommentViewController* lHomeVC;
+//    if(iPhone5){
+//        lHomeVC= [[AddCommentViewController alloc] initWithNibName:@"AddCommentViewController_iPhone5" bundle:nil];
+//    } else if (iPhone) {
+//        lHomeVC= [[AddCommentViewController alloc] initWithNibName:@"AddCommentViewController" bundle:nil];
+//    }
+//    [lHomeVC setEventID:lEventID];
+//    self.window.rootViewController = lHomeVC;
+//    
+//}
+
 @end
 
 
