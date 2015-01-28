@@ -6,22 +6,30 @@
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>4A21C8BF-5701-4A37-B8AA-C6FACE1C4FDE</string>
+	<key>IDESourceControlProjectName</key>
+	<string>eMaguen</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+		<key>396AA37B0EF44A486B611B984F2C05E71ED65587</key>
+		<string>https://github.com/saipraveenkumar/SVN.git</string>
 		<key>8E0EF58A06D4DFF2DF9FDB32E197990ADE51FFAA</key>
 		<string>https://github.com/Pelesystem/eMaguen_iOS</string>
 	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>eMaguen V2/eMaguen.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
+		<key>396AA37B0EF44A486B611B984F2C05E71ED65587</key>
+		<string>../../..</string>
 		<key>8E0EF58A06D4DFF2DF9FDB32E197990ADE51FFAA</key>
-		<string>eMaguen/</string>
+		<string>../../..eMaguen%20V2/eMaguen/</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/Pelesystem/eMaguen_iOS</string>
+	<string>https://github.com/saipraveenkumar/SVN.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>8E0EF58A06D4DFF2DF9FDB32E197990ADE51FFAA</string>
+	<string>396AA37B0EF44A486B611B984F2C05E71ED65587</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
@@ -31,6 +39,14 @@
 			<string>8E0EF58A06D4DFF2DF9FDB32E197990ADE51FFAA</string>
 			<key>IDESourceControlWCCName</key>
 			<string>eMaguen</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>396AA37B0EF44A486B611B984F2C05E71ED65587</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SVN</string>
 		</dict>
 	</array>
 </dict>
