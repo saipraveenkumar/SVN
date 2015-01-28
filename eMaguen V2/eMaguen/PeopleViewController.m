@@ -30,6 +30,7 @@ ABNewPersonViewControllerDelegate, ABUnknownPersonViewControllerDelegate>{
     NSString *useString;
     int personsCount,option,index;
     UIAlertView *alertBox;
+    UIActionSheet *actionSheetView;
 }
 
 @property (nonatomic, assign) ABAddressBookRef addressBook;
@@ -205,38 +206,44 @@ ABNewPersonViewControllerDelegate, ABUnknownPersonViewControllerDelegate>{
 {
     NSString* name = (__bridge_transfer   NSString*)ABRecordCopyValue(person,kABPersonFirstNameProperty);
     NSString* lastName = (__bridge_transfer   NSString*)ABRecordCopyValue(person,kABPersonLastNameProperty);
-    //    NSMutableArray *allEmails = [[NSMutableArray alloc] init];
-    //    NSArray *allEmails = (__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonEmailProperty));
     NSLog(@"Contact:%@",name);
-    //        ABMultiValueRef emails = ABRecordCopyValue(person, kABPersonEmailProperty);
-    //        for (CFIndex j=0; j < ABMultiValueGetCount(emails); j++) {
-    //            NSString* email = (__bridge NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-    //            [allEmails addObject:email];
-    //        }
     if([(__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonEmailProperty)) count]<=0){
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Atención" message:@"Sin email" delegate:self cancelButtonTitle:@"Aceptar" otherButtonTitles: nil];
         [alert show];
     }
     else{
         [contactName setString:[NSString stringWithFormat:@"%@ %@", (name ? name :[NSString stringWithFormat:@""]),(lastName ? lastName :[NSString stringWithFormat:@""])]];
-        [contactNumber setString:[(__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonEmailProperty)) objectAtIndex:0]];
-        if([[[NSUserDefaults standardUserDefaults] objectForKey:@"kPrefKeyForUpdatedeMail"] isEqualToString:contactNumber]){
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Atención" message:@"Request not processed. Choosen your own email id." delegate:self cancelButtonTitle:@"Aceptar" otherButtonTitles: nil];
-            [alert show];
-            [contactName setString:[NSString stringWithFormat:@"%@",nil]];
-            [contactNumber setString:[NSString stringWithFormat:@"%@",nil]];
+        if([(__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonEmailProperty)) count] > 1){
+            if(!actionSheetView)
+                actionSheetView = [[UIActionSheet alloc] initWithTitle:@"Elija una de las eMailid ..!"
+                                                              delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil
+                                                     otherButtonTitles:nil];
+            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+            for(NSString *str in (((__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonEmailProperty))))){
+                [actionSheetView addButtonWithTitle:str];
+            }
+            [actionSheetView addButtonWithTitle:@"Cancelar"];
+            actionSheetView.tag = 101;
+            actionSheetView.actionSheetStyle = UIActionSheetStyleAutomatic;
+            actionSheetView.destructiveButtonIndex = [(((__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonEmailProperty)))) count];
+            [actionSheetView showInView:window];
         }
         else{
-            alertBox = [[UIAlertView alloc]initWithTitle:@"Atención" message:[NSString stringWithFormat:@"¿ Quieres agregar a %@ %@ al Grupo %@?", [(name ? name :[NSString stringWithFormat:@""]) uppercaseString],[(lastName ? lastName :[NSString stringWithFormat:@""]) uppercaseString],[[lGroupDetails objectAtIndex:1] uppercaseString]] delegate:self cancelButtonTitle:@"Cancelar" otherButtonTitles:@"Aceptar", nil];
-            alertBox.tag = 1;
-            [alertBox show];
+            [contactNumber setString:[(__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonEmailProperty)) objectAtIndex:0]];
+            if([[[NSUserDefaults standardUserDefaults] objectForKey:@"kPrefKeyForUpdatedeMail"] isEqualToString:contactNumber]){
+                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Atención" message:@"Solicite no procesada. Elegido su propio correo electrónico de identificación." delegate:self cancelButtonTitle:@"Aceptar" otherButtonTitles: nil];
+                [alert show];
+                [contactName setString:[NSString stringWithFormat:@"%@",nil]];
+                [contactNumber setString:[NSString stringWithFormat:@"%@",nil]];
+            }
+            else{
+                alertBox = [[UIAlertView alloc]initWithTitle:@"Atención" message:[NSString stringWithFormat:@"¿ Quieres agregar a %@ %@ al Grupo %@?", [(name ? name :[NSString stringWithFormat:@""]) uppercaseString],[(lastName ? lastName :[NSString stringWithFormat:@""]) uppercaseString],[[lGroupDetails objectAtIndex:1] uppercaseString]] delegate:self cancelButtonTitle:@"Cancelar" otherButtonTitles:@"Aceptar", nil];
+                alertBox.tag = 1;
+                [alertBox show];
+            }
         }
     }
     NSLog(@"Contacts:\n\n%@\n\n%@",contactName,contactNumber);
-    
-    
-    
-    
     
     //    NSMutableArray *numbers = [[NSMutableArray alloc]init];
     //    ABMultiValueRef phones = ABRecordCopyValue(person, kABPersonPhoneProperty);
@@ -271,6 +278,18 @@ ABNewPersonViewControllerDelegate, ABUnknownPersonViewControllerDelegate>{
     //        NSLog(@"Phone:%@",phone);
     //    }
     //    NSLog(@"Contacts:\n\n%@\n\n%@",contactName,contactNumber);
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if(actionSheet.tag == 101){
+        if(buttonIndex != actionSheet.destructiveButtonIndex){
+            NSLog(@"%@",[actionSheet buttonTitleAtIndex:buttonIndex]);
+            contactNumber = [NSMutableString stringWithString:[actionSheet buttonTitleAtIndex:buttonIndex]];
+            alertBox = [[UIAlertView alloc]initWithTitle:@"Atención" message:[NSString stringWithFormat:@"¿ Quieres agregar a %@ al Grupo %@?", [contactName uppercaseString],[[lGroupDetails objectAtIndex:1] uppercaseString]] delegate:self cancelButtonTitle:@"Cancelar" otherButtonTitles:@"Aceptar", nil];
+            alertBox.tag = 1;
+            [alertBox show];
+        }
+    }
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{

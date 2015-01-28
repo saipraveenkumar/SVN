@@ -10,7 +10,7 @@
 #import <MessageUI/MessageUI.h>
 
 
-@interface PeopleViewController : RootViewController<MFMessageComposeViewControllerDelegate,UIAlertViewDelegate>{
+@interface PeopleViewController : RootViewController<MFMessageComposeViewControllerDelegate,UIAlertViewDelegate, UIActionSheetDelegate>{
     IBOutlet UILabel *lblGroupName;
     IBOutlet UITableView *lTableView;
 }

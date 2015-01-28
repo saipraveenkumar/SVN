@@ -22,6 +22,9 @@ MyAppAppDelegate *mAppDelegate;
     UIButton *button;
     NSMutableArray *contacts, *mAlarmDetails;
     ABPeoplePickerNavigationController *picker;
+    UIActionSheet *actionSheetView;
+    
+    MFMessageComposeViewController *msg1, *msg2, *msg3;
 }
 @end
 
@@ -105,12 +108,15 @@ MyAppAppDelegate *mAppDelegate;
                     message = [NSString stringWithFormat:@"TEL:\n1.%@\n2.%@\n3.%@\n4.%@\n5.%@",[lData objectForKey:@"kPrefKeyForCountryNumber"],[lData objectForKey:@"kPrefKeyForPhone"],[[mAlarmDetails objectAtIndex:0] objectForKey:@"phone"],[[mAlarmDetails objectAtIndex:1] objectForKey:@"phone"],[[mAlarmDetails objectAtIndex:2] objectForKey:@"phone"]];
                 }
                 NSLog(@"\n%@",message);
-                MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
-                messageController.messageComposeDelegate = self;
-                [messageController setRecipients:recipents];
-                [messageController setBody:message];
+                
+                msg1 = nil;
+                msg1= [[MFMessageComposeViewController alloc] init];
+                msg1.messageComposeDelegate = self;
+                [msg1 setRecipients:recipents];
+                [msg1 setBody:message];
                 // Present message view controller on screen
-                [self presentViewController:messageController animated:YES completion:nil];
+                [self presentViewController:msg1 animated:YES completion:nil];
+                
             }
         }
     }
@@ -122,7 +128,35 @@ MyAppAppDelegate *mAppDelegate;
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult) result
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        NSLog(@"Controller is dimissed :%@",controller);
+        if(smsCount == 0){
+            NSArray *recipents = [NSArray arrayWithObject:alarmSimNumber];//alarmSimNumber
+            NSString *message = [NSString stringWithFormat:@"Zone information:\n1.Bunker360Alarm\n2.Bunker360Alarm\n3.Bunker360Alarm\n4."];
+            NSLog(@"\n%@",message);
+            msg2 = nil;
+            msg2 = [[MFMessageComposeViewController alloc] init];
+            msg2.messageComposeDelegate = self;
+            [msg2 setRecipients:recipents];
+            [msg2 setBody:message];
+            // Present message view controller on screen
+            [self presentViewController:msg2 animated:YES completion:nil];
+            ++smsCount;
+        }
+        else if (smsCount == 1){
+            NSArray *recipents = [NSArray arrayWithObject:alarmSimNumber];//alarmSimNumber
+            NSString *message = [NSString stringWithFormat:@"30"];
+            NSLog(@"\n%@",message);
+            msg3 = nil;
+            msg3 = [[MFMessageComposeViewController alloc] init];
+            msg3.messageComposeDelegate = self;
+            [msg3 setRecipients:recipents];
+            [msg3 setBody:message];
+            // Present message view controller on screen
+            [self presentViewController:msg3 animated:YES completion:nil];
+            ++smsCount;
+        }
+    }];
     switch (result) {
         case MessageComposeResultCancelled:
             if(smsCount == 2){
@@ -150,30 +184,6 @@ MyAppAppDelegate *mAppDelegate;
             
         default:
             break;
-    }
-    if(smsCount == 0){
-        NSArray *recipents = [NSArray arrayWithObject:alarmSimNumber];//alarmSimNumber
-        NSString *message = [NSString stringWithFormat:@"Zone information:\n1.Bunker360Alarm\n2.Bunker360Alarm\n3.Bunker360Alarm\n4."];
-        NSLog(@"\n%@",message);
-        MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
-        messageController.messageComposeDelegate = self;
-        [messageController setRecipients:recipents];
-        [messageController setBody:message];
-        // Present message view controller on screen
-        [self presentViewController:messageController animated:YES completion:nil];
-        ++smsCount;
-    }
-    else if (smsCount == 1){
-        NSArray *recipents = [NSArray arrayWithObject:alarmSimNumber];//alarmSimNumber
-        NSString *message = [NSString stringWithFormat:@"30"];
-        NSLog(@"\n%@",message);
-        MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
-        messageController.messageComposeDelegate = self;
-        [messageController setRecipients:recipents];
-        [messageController setBody:message];
-        // Present message view controller on screen
-        [self presentViewController:messageController animated:YES completion:nil];
-        ++smsCount;
     }
 }
 
@@ -396,18 +406,13 @@ MyAppAppDelegate *mAppDelegate;
         NSMutableString* phone;
         if([(__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonPhoneProperty)) count] > 1){
             fullName =[NSString stringWithFormat:@"%@ %@", (name ? name :[NSString stringWithFormat:@""]),(lastName ? lastName :[NSString stringWithFormat:@""])];
-            UIActionSheet *actionSheetView = [[UIActionSheet alloc] initWithTitle:@"Elija uno de los números de contacto ..!"
+            
+            actionSheetView = nil;
+            if(!actionSheetView)
+            actionSheetView = [[UIActionSheet alloc] initWithTitle:@"Elija uno de los números de contacto ..!"
                                                                          delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil
                                                                 otherButtonTitles:nil];
-//            actionSheetView.frame = CGRectMake(0, 0, 320, 480);
-//            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-//            if ([window.subviews containsObject:self.view]) {
-//                [actionSheetView showInView:self.view];
-//            } else {
-//                [actionSheetView showInView:window];
-//            }
-//            [actionSheetView showInView:[[[[UIApplication sharedApplication] keyWindow] subviews] lastObject]];
-//            [actionSheetView showFromRect:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width,[[UIScreen mainScreen] bounds].size.height) inView:self.view animated:YES];
+            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
             for(NSString *str in (((__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonPhoneProperty))))){
                 [actionSheetView addButtonWithTitle:str];
             }
@@ -415,7 +420,7 @@ MyAppAppDelegate *mAppDelegate;
             actionSheetView.tag = 101;
             actionSheetView.actionSheetStyle = UIActionSheetStyleAutomatic;
             actionSheetView.destructiveButtonIndex = [(((__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonPhoneProperty)))) count];
-            [actionSheetView showInView:self.view];
+            [actionSheetView showInView:window];
         }
         else{
             if(!phone)

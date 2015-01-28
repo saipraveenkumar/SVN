@@ -550,14 +550,16 @@ MyAppAppDelegate *mAppDelegate;
         if([(__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonPhoneProperty)) count] > 1){
             fullName = [NSString stringWithFormat:@"%@ %@", ((__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonFirstNameProperty)) :[NSString stringWithFormat:@""]),((__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) ? (__bridge NSString *)(ABRecordCopyValue(person, kABPersonLastNameProperty)) :[NSString stringWithFormat:@""])];
             UIActionSheet *actionSheetView = [[UIActionSheet alloc] initWithTitle:@"Elija uno de los números de contacto ..!"
-                                                                         delegate:self cancelButtonTitle:@"Cancelar" destructiveButtonTitle:nil
+                                                                         delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil
                                                                 otherButtonTitles:nil];
+            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
             for(NSString *str in (((__bridge NSArray *)ABMultiValueCopyArrayOfAllValues(ABRecordCopyValue(person, kABPersonPhoneProperty))))){
                 [actionSheetView addButtonWithTitle:str];
             }
+            [actionSheetView addButtonWithTitle:@"Cancelar"];
             actionSheetView.tag = 101;
             actionSheetView.actionSheetStyle = UIActionSheetStyleAutomatic;
-            [actionSheetView showInView:self.view];
+            [actionSheetView showInView:window];
         }
         else{
             if(!phone)

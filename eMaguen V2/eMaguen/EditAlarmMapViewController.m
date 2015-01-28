@@ -179,20 +179,20 @@ MyAppAppDelegate *mAppDelegate;
         default:
             break;
     }
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
-    if(smsCount == 0){
-        NSArray *recipents = [NSArray arrayWithObject:[mAlaramDetails objectAtIndex:1]];//alarmSimNumber
-        NSString *message = [NSString stringWithFormat:@"Zone information:\n1.eMaguen\n2.eMaguen\n3.eMaguen\n4."];
-        NSLog(@"\n%@",message);
-        MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
-        messageController.messageComposeDelegate = self;
-        [messageController setRecipients:recipents];
-        [messageController setBody:message];
-        // Present message view controller on screen
-        [self presentViewController:messageController animated:YES completion:nil];
-        ++smsCount;
-    }
+    [self dismissViewControllerAnimated:YES completion:^{
+        if(smsCount == 0){
+            NSArray *recipents = [NSArray arrayWithObject:[mAlaramDetails objectAtIndex:1]];//alarmSimNumber
+            NSString *message = [NSString stringWithFormat:@"Zone information:\n1.eMaguen\n2.eMaguen\n3.eMaguen\n4."];
+            NSLog(@"\n%@",message);
+            MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
+            messageController.messageComposeDelegate = self;
+            [messageController setRecipients:recipents];
+            [messageController setBody:message];
+            // Present message view controller on screen
+            [self presentViewController:messageController animated:YES completion:nil];
+            ++smsCount;
+        }
+    }];
 }
 
 
